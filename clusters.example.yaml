@@ -1,0 +1,18 @@
+# Copy to clusters.yaml and point CLUSTERS_FILE at it.
+# kubeconfig/context are optional; omit both to use the in-cluster service
+# account of the pod running the scanner.
+clusters:
+  - name: prod-eu
+    kubeconfig: /etc/kube/config
+    context: prod-eu
+    prometheus_url: https://prometheus.prod-eu.internal
+    verify_ssl: true
+
+  - name: prod-us
+    kubeconfig: /etc/kube/config
+    context: prod-us
+    prometheus_url: https://prometheus.prod-us.internal
+    verify_ssl: true
+
+  - name: edge
+    prometheus_url: https://prometheus.edge.internal

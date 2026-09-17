@@ -1,0 +1,31 @@
+# Cluster-wide read access for the scanner. Apply once per scanned cluster.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fleet-copilot
+  namespace: observability
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fleet-copilot-reader
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "statefulsets", "daemonsets", "replicasets"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: fleet-copilot-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: fleet-copilot-reader
+subjects:
+  - kind: ServiceAccount
+    name: fleet-copilot
+    namespace: observability
