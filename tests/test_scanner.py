@@ -5,7 +5,7 @@ from typing import Mapping, Sequence
 
 from fleet_copilot.collectors.prometheus import MetricsIndex
 from fleet_copilot.scanner import FleetScanner
-from helpers import make_app_ref, make_cluster
+from helpers import NOW, make_app_ref, make_cluster
 
 
 class FakeKube:
@@ -38,7 +38,7 @@ class FakeProm:
 
 def make_scanner(kube, prom):
     clusters = [make_cluster("prod-eu"), make_cluster("prod-us")]
-    return FleetScanner(kube, prom, clusters)
+    return FleetScanner(kube, prom, clusters, clock=lambda: NOW)
 
 
 def test_scan_merges_kubernetes_state_with_prometheus_metrics():

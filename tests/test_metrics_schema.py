@@ -18,7 +18,7 @@ from fleet_copilot.metrics_schema import (
 def test_default_schema_covers_every_numeric_field():
     assert set(fields(DEFAULT_METRICS)) == set(NUMERIC_FIELDS)
     assert all(definition.scope in VALID_SCOPES for definition in DEFAULT_METRICS)
-    assert all("[5m]" in definition.query or "or" in definition.query for definition in DEFAULT_METRICS)
+    assert all("namespace" in definition.query for definition in DEFAULT_METRICS)
 
 
 def test_load_metric_schema_from_file(tmp_path):
