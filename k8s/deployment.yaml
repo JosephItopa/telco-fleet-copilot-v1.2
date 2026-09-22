@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrics-collector
+  namespace: monitoring
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: metrics-collector
+  template:
+    metadata:
+      labels:
+        app: metrics-collector
+    spec:
+      serviceAccountName: metrics-collector
+      containers:
+        - name: collector
+          image: your-registry/metrics-collector:latest
+          imagePullPolicy: Always
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka.kafka.svc.cluster.local:9092"
+            - name: KAFKA_TOPIC
+              value: "app-performance-metrics"
+            - name: KAFKA_PARTITIONS
+              value: "24"
+            - name: COLLECT_INTERVAL_SECONDS
+              value: "15"
+            - name: MAX_CONCURRENT_SCRAPES
+              value: "50"
+            - name: KUBERNETES_CLUSTER_NAME
+              value: "cluster-01"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "1000m"
+              memory: "512Mi"
